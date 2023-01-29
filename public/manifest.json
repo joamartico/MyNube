@@ -3,8 +3,8 @@
     "background_color": "#66CFD5",
     "display": "standalone",
     "start_url": ".",
-    "name": "Boilerplate",
-    "short_name": "Boilerplate",
+    "name": "MyNube",
+    "short_name": "MyNube",
     "icons": [
         {
           "src": "rounded.png",

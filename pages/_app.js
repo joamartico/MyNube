@@ -32,7 +32,7 @@ function MyApp({ Component, pageProps }) {
 			<Head>
 				<meta httpEquiv="X-UA-Compatible" content="IE=edge" />
 				{/* SEO  */}
-				<title>Boilerplate</title>
+				<title>MyNube</title>
 				<meta
 					name="description"
 					content="Boilerplate is your web app to search and track your food and nutrition."
