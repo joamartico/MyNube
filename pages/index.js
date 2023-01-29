@@ -36,11 +36,12 @@ export default function Home({ accessToken }) {
 
 	useEffect(() => {
 		if (session && !accessToken) {
+			console.log('!accessToken')
 			signOut();
-		}
-		console.log("images: ", images);
-		if (session && images.length == 0) {
-			getData();
+		} else {
+			if (session && images.length == 0) {
+				getData();
+			}
 		}
 	}, [session]);
 
