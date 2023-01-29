@@ -38,14 +38,14 @@ export default function Home({ accessToken }) {
 		if (session && !accessToken) {
 			signOut();
 		}
-		console.log('images: ', images)
+		console.log("images: ", images);
 		if (session && images.length == 0) {
 			getData();
 		}
 	}, [session]);
 
 	async function getData() {
-		console.log('getting Data')
+		console.log("getting Data");
 		axios
 			.get("/api/getData", {
 				withCredentials: true,
@@ -53,7 +53,7 @@ export default function Home({ accessToken }) {
 					pageSize,
 				},
 				onDownloadProgress: (progressEvent) => {
-					console.log(progressEvent)
+					console.log(progressEvent);
 					// console.log(progressEvent);
 					const { loaded } = progressEvent;
 					// const total =
@@ -64,17 +64,18 @@ export default function Home({ accessToken }) {
 				},
 			})
 			.then((response) => {
-				console.log('successful fetch: ', response);
+				console.log("successful fetch: ", response);
 
-				if(response.data.length < 2){ // no deberia ser asi
-					signOut()
+				if (response.data.length < 2) {
+					// no deberia ser asi
+					signOut();
 				}
 
 				// console.log("response-headers: ", response.headers["content-length"]);
 				setProgress();
 				setImages(response.data);
 			})
-			.catch(e => console.log('failed fetch: ', e))
+			.catch((e) => console.log("failed fetch: ", e));
 	}
 
 	return (
