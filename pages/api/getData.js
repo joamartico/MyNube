@@ -39,7 +39,14 @@ const getData = async (pageSize) => {
 				}),
 			}
 		);
+
+		
 		const data = await response.json();
+		
+		if(data.error) {
+			return res.status(401).end();
+		}
+		
 		photos = photos.concat(data.mediaItems);
 		if (!data.nextPageToken) {
 			break;
@@ -114,12 +121,16 @@ export default async (req, res) => {
 	const token = await getToken({ req, secret, encryption: true });
 	accessToken = token.accessToken;
 
-  if (!accessToken) {
+	
+	if (!accessToken) {
 		return res.status(401).end();
 	}
-
+	
 	const pageSize = req.query.pageSize;
 	const data = await getData(pageSize);
+	if (!data) {
+		return res.status(401).end();
+	}
 
 	res.setHeader("X-Progress", 12345);
 	res.status(200).json(data);

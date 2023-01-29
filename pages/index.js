@@ -1,4 +1,4 @@
-import { getSession, signIn, signOut, useSession } from "next-auth/client";
+import { getSession, signOut, useSession } from "next-auth/client";
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import { getToken } from "next-auth/jwt";
@@ -6,11 +6,28 @@ import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import styled from "styled-components";
 
+const months = [
+	"Enrero",
+	"Febrero",
+	"Marzo",
+	"Abril",
+	"Mayo",
+	"Junio",
+	"Julio",
+	"Agosto",
+	"Septiembre",
+	"Octubre",
+	"Noviembre",
+	"Diciembre",
+];
+
+const years = [2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015];
+
 export default function Home({ accessToken }) {
 	const [session, loadingSession] = useSession();
 	const [images, setImages] = useState([]);
 	const [pageSize, setPageSize] = useState(101);
-	const [progress, setProgress] = useState(2000000);
+	const [progress, setProgress] = useState(null);
 	const [popover, setPopover] = useState(false);
 
 	async function zipImages(_images) {
@@ -36,17 +53,19 @@ export default function Home({ accessToken }) {
 
 	useEffect(() => {
 		if (session && !accessToken) {
-			console.log('!accessToken')
+			console.log("!accessToken");
 			signOut();
-		} else {
-			if (session && images.length == 0) {
-				getData();
-			}
 		}
+		// else {
+		// 	if (session && images.length == 0) {
+		// 		getData();
+		// 	}
+		// }
 	}, [session]);
 
 	async function getData() {
 		console.log("getting Data");
+		setProgress(10000000)
 		axios
 			.get("/api/getData", {
 				withCredentials: true,
@@ -76,76 +95,116 @@ export default function Home({ accessToken }) {
 				setProgress();
 				setImages(response.data);
 			})
-			.catch((e) => console.log("failed fetch: ", e));
+			.catch((e) => {
+				console.log("failed fetch: ", e);
+				signOut();
+			});
 	}
 
 	return (
 		<>
-			<Popover isOpen={popover} onClick={() => signOut()}>
-				Sign Out
-			</Popover>
-
 			<ion-header>
 				<ion-toolbar>
-					{session && (
-						<>
-							<ion-buttons slot="primary">
-								{session.user.email}
-								<ion-button
-									onClick={() => setPopover((prev) => !prev)}
-								>
-									<Avatar
-										src={session.user.image}
-										referrerpolicy="no-referrer"
-										layout="fill"
-									/>
-								</ion-button>
-							</ion-buttons>
-						</>
-					)}
+					<ion-buttons slot="primary">
+						{session?.user.email}
+						<ion-button onClick={() => setPopover((prev) => !prev)}>
+							<Avatar
+								src={session?.user.image}
+								referrerpolicy="no-referrer"
+								layout="fill"
+							/>
+						</ion-button>
+					</ion-buttons>
+
 					<Logo>MyNube</Logo>
 				</ion-toolbar>
 			</ion-header>
 
-			<ion-content>
-				{!session && (
-					<CenterDiv>
-						<h2>Inicia sesión en MyNube</h2>
-						<ion-button
-							color="dark"
-							fill="outline"
-							onClick={() => signIn("google")}
-						>
-							<ion-icon name="google" />
-							&nbsp;&nbsp;Continue with Google
-						</ion-button>
-					</CenterDiv>
-				)}
+			<Popover isOpen={popover} onClick={() => signOut()}>
+				Sign Out
+			</Popover>
 
-				{session && (
+			<ion-content>
+				{images?.length > 0 ? (
 					<>
 						<List>
 							{images?.map((img, i) => (
 								<Img src={img?.baseUrl} key={i} />
 							))}
-
-							{progress && (
-								<progress
-									value={progress}
-									max={pageSize * 1200000}
-								/>
-							)}
 						</List>
-						
+
 						<DownloadButton
 							expand="block"
 							onClick={() => {
 								zipImages(images);
 							}}
 						>
-							Download zip
+							Obtener ZIP
 						</DownloadButton>
 					</>
+				) : (
+					<ion-list>
+						<ion-list-header>
+							<ion-label>Filtra las fotos a descargar</ion-label>
+						</ion-list-header>
+
+						<ion-item fill="outline">
+							<ion-label>Selecciona un mes</ion-label>
+							<ion-select interface="popover" placeholder="Mes">
+								{months.map((month) => (
+									<ion-select-option value={month}>
+										{month}
+									</ion-select-option>
+								))}
+							</ion-select>
+						</ion-item>
+
+						<ion-item>
+							<ion-label>Selecciona un año</ion-label>
+							<ion-select interface="popover" placeholder="Año">
+								{years.map((year) => (
+									<ion-select-option value={year}>
+										{year}
+									</ion-select-option>
+								))}
+							</ion-select>
+						</ion-item>
+
+						<ion-item>
+							<ion-label>Cantidad máxima</ion-label>
+							<ion-select
+								interface="popover"
+								placeholder="Número"
+							>
+								<ion-select-option value="All">
+									All
+								</ion-select-option>
+								<ion-select-option value="10">
+									10
+								</ion-select-option>
+								<ion-select-option value="50">
+									50
+								</ion-select-option>
+								<ion-select-option value="100">
+									100
+								</ion-select-option>
+							</ion-select>
+						</ion-item>
+
+						<div class="ion-padding">
+							<ion-button
+								expand="block"
+								fill="outline"
+								onClick={() => getData()}
+							>
+								Buscar
+							</ion-button>
+						</div>
+					</ion-list>
+				)}
+
+				{progress && (
+					<progress value={progress} max={pageSize * 1200000} />
 				)}
 			</ion-content>
 		</>
@@ -156,6 +215,15 @@ export async function getServerSideProps({ req }) {
 	const secret = process.env.SECRET;
 
 	const session = await getSession({ req });
+
+	if (!session) {
+		return {
+			redirect: {
+				destination: "/login",
+				permanent: false,
+			},
+		};
+	}
 
 	const token = await getToken({ req, secret, encryption: true });
 	if (!token) return { props: { session } };
@@ -208,15 +276,6 @@ export async function getServerSideProps({ req }) {
 	};
 }
 
-const CenterDiv = styled.div`
-	width: 100%;
-	height: 100%;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-`;
-
 const Logo = styled.h1`
 	font-weight: 700;
 	margin: auto 15px;
@@ -261,11 +320,12 @@ const DownloadButton = styled.div`
 	margin: auto;
 	display: flex;
 	font-weight: 700;
+	font-size: 17px;
 	cursor: pointer;
 	text-align: center;
 	justify-content: center;
 	align-items: center;
-	box-shadow: 0px 4px 33px 15px rgba(0, 0, 0, 0.8);
+	box-shadow: 0px 4px 43px 15px rgba(0, 0, 0, 0.8);
 	color: white;
 	border: 2px solid #fff6;
 `;

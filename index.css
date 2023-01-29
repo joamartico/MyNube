@@ -1,11 +1,19 @@
-ion-select {
+/* ion-select {
     background-color: transparent !important;
     color: transparent !important;
     position: absolute;
     top: 0;
     width: 100%;
-}
+} */
 
+
+
+ion-select-popover {
+    overflow-y: auto !important;
+    max-height: 200px;
+     padding-bottom: 0px !important; /* no funca */
+    --padding-bottom: 0px !important; /* no funca */
+}
 
 :root {
     /** primary **/
