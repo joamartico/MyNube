@@ -68,7 +68,7 @@ export default function Home({ accessToken }) {
 
 				if (response.data.length < 2) {
 					// no deberia ser asi
-					signOut();
+					// signOut();
 				}
 
 				// console.log("response-headers: ", response.headers["content-length"]);
@@ -123,15 +123,6 @@ export default function Home({ accessToken }) {
 
 				{session && (
 					<>
-						<DownloadButton
-							expand="block"
-							onClick={() => {
-								zipImages(images);
-							}}
-						>
-							Download zip
-						</DownloadButton>
-
 						<List>
 							{images?.map((img, i) => (
 								<Img src={img?.baseUrl} key={i} />
@@ -144,6 +135,15 @@ export default function Home({ accessToken }) {
 								/>
 							)}
 						</List>
+						
+						<DownloadButton
+							expand="block"
+							onClick={() => {
+								zipImages(images);
+							}}
+						>
+							Download zip
+						</DownloadButton>
 					</>
 				)}
 			</ion-content>
@@ -235,7 +235,7 @@ const Popover = styled.div`
 	background: red;
 	display: ${({ isOpen }) => (isOpen ? "block" : "none")};
 	right: 10px;
-	top: 60px;
+	top: 50px;
 	background: white;
 	border-radius: 10px;
 	/* border: 1px solid #aaa; */
@@ -264,22 +264,24 @@ const DownloadButton = styled.div`
 	text-align: center;
 	justify-content: center;
 	align-items: center;
-	box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.2);
+	box-shadow: 0px 4px 33px 15px rgba(0, 0, 0, 0.8);
 	color: white;
+	border: 2px solid #fff6;
 `;
 
 const Img = styled.img`
 	max-height: 200px;
-	margin-right: 16px;
-	margin-bottom: 16px;
+	margin-right: 6px;
+	margin-left: 6px;
+	margin-bottom: 20px;
 	border-radius: 5px;
 `;
 
 const List = styled.div`
 	width: 100%;
-	height: 100%;
-	padding: 20px;
-	padding-bottom: 150px;
+	/* height: 100%; */
+	padding: 10px;
+	padding-bottom: 75px;
 	display: flex;
 	flex-wrap: wrap;
 	/* justify-content: center; */
