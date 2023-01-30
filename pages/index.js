@@ -29,7 +29,7 @@ const todayDate = new Date();
 export default function Home({ accessToken }) {
 	const [session, loadingSession] = useSession();
 	const [images, setImages] = useState();
-	const [pageSize, setPageSize] = useState(101);
+	const [pageSize, setPageSize] = useState(100);
 	const [progress, setProgress] = useState(null);
 	const [popover, setPopover] = useState(false);
 	const [filter, setFilter] = useState({
@@ -70,7 +70,7 @@ export default function Home({ accessToken }) {
 		console.log("getting Data");
 		setProgress(10000000);
 		axios
-			.get("https://mynube.vercel.app/api/getData", {
+			.get("/api/test", {
 				withCredentials: true,
 				params: {
 					pageSize,

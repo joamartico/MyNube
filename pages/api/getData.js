@@ -114,9 +114,9 @@ const getData = async (month, year, pageSize, res) => {
 export default async (req, res) => {
 	const session = await getSession({ req });
 
-	if (!session) {
-		return res.status(401).end();
-	}
+	// if (!session) {
+	// 	return res.status(401).end();
+	// }
 
 	const token = await getToken({ req, secret, encryption: true });
 	accessToken = token.accessToken;
