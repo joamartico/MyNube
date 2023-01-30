@@ -44,7 +44,7 @@ const getData = async (month, year, pageSize, res) => {
 		const data = await response.json();
 
 		if(data.error) {
-			return res.status(401).end();
+			return res.status(401).json(data.error)
 		}
 		
 		photos = photos.concat(data.mediaItems);
