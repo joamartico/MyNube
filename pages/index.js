@@ -90,19 +90,13 @@ export default function Home({ accessToken }) {
 			})
 			.then((response) => {
 				console.log("successful fetch: ", response);
-
-				if (response.data.length < 2) {
-					// no deberia ser asi
-					// signOut();
-				}
-
 				// console.log("response-headers: ", response.headers["content-length"]);
 				setProgress();
 				setImages(response.data);
 			})
 			.catch((e) => {
 				console.log("failed fetch: ", e);
-				signOut();
+				// signOut();
 			});
 	}
 
@@ -258,8 +252,6 @@ export default function Home({ accessToken }) {
 						</div>
 					</ion-list>
 				)}
-
-				{console.log(filter)}
 
 				{progress && (
 					<progress value={progress} max={pageSize * 1200000} />
