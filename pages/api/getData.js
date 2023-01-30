@@ -6,7 +6,7 @@ const JSZip = require("jszip");
 const secret = process.env.SECRET;
 let accessToken;
 
-const getData = async (pageSize) => {
+const getData = async (month, year, pageSize, res) => {
 	let pageToken = "";
 	let photos = [];
 
@@ -25,8 +25,8 @@ const getData = async (pageSize) => {
 						dateFilter: {
 							dates: [
 								{
-									year: 2022,
-									month: 12,
+									year: year,
+									month: month,
 								},
 							],
 						},
@@ -42,7 +42,7 @@ const getData = async (pageSize) => {
 
 		
 		const data = await response.json();
-		
+
 		if(data.error) {
 			return res.status(401).end();
 		}
@@ -126,8 +126,10 @@ export default async (req, res) => {
 		return res.status(401).end();
 	}
 	
+	const month = req.query.month;
+	const year = req.query.year;
 	const pageSize = req.query.pageSize;
-	const data = await getData(pageSize);
+	const data = await getData(month, year, pageSize, res);
 	if (!data) {
 		return res.status(401).end();
 	}

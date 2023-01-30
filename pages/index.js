@@ -5,9 +5,10 @@ import { getToken } from "next-auth/jwt";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import styled from "styled-components";
+import IonSelect from "../components/IonSelect";
 
 const months = [
-	"Enrero",
+	"Enero",
 	"Febrero",
 	"Marzo",
 	"Abril",
@@ -23,12 +24,19 @@ const months = [
 
 const years = [2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015];
 
+const todayDate = new Date();
+
 export default function Home({ accessToken }) {
 	const [session, loadingSession] = useSession();
-	const [images, setImages] = useState([]);
+	const [images, setImages] = useState();
 	const [pageSize, setPageSize] = useState(101);
 	const [progress, setProgress] = useState(null);
 	const [popover, setPopover] = useState(false);
+	const [filter, setFilter] = useState({
+		year: todayDate.getFullYear(),
+		month: todayDate.getMonth() + 1,
+		max: null,
+	});
 
 	async function zipImages(_images) {
 		const zip = new JSZip();
@@ -56,21 +64,18 @@ export default function Home({ accessToken }) {
 			console.log("!accessToken");
 			signOut();
 		}
-		// else {
-		// 	if (session && images.length == 0) {
-		// 		getData();
-		// 	}
-		// }
 	}, [session]);
 
 	async function getData() {
 		console.log("getting Data");
-		setProgress(10000000)
+		setProgress(10000000);
 		axios
 			.get("/api/getData", {
 				withCredentials: true,
 				params: {
 					pageSize,
+					month: filter.month,
+					year: filter.year,
 				},
 				onDownloadProgress: (progressEvent) => {
 					console.log(progressEvent);
@@ -116,7 +121,14 @@ export default function Home({ accessToken }) {
 						</ion-button>
 					</ion-buttons>
 
-					<Logo>MyNube</Logo>
+					{!images ? (
+						<Logo>MyNube</Logo>
+					) : (
+						<ion-buttons slot="start">
+							<ion-back-button default-href="/" onClick={() => setImages()}></ion-back-button>
+						</ion-buttons>
+					)}
+
 				</ion-toolbar>
 			</ion-header>
 
@@ -125,6 +137,21 @@ export default function Home({ accessToken }) {
 			</Popover>
 
 			<ion-content>
+				{images ? (
+					<>
+						<ion-toolbar style={{ marginBottom: 15, marginTop: 20 }}>
+							<ion-title
+								size="large"
+								
+							>
+								{months[filter.month - 1]} {filter.year}
+							</ion-title>
+						</ion-toolbar>
+					</>
+				) : (
+					""
+				)}
+
 				{images?.length > 0 ? (
 					<>
 						<List>
@@ -150,27 +177,56 @@ export default function Home({ accessToken }) {
 
 						<ion-item fill="outline">
 							<ion-label>Selecciona un mes</ion-label>
-							<ion-select interface="popover" placeholder="Mes">
-								{months.map((month) => (
-									<ion-select-option value={month}>
+							<IonSelect
+								interface="popover"
+								placeholder="Mes"
+								value={todayDate.getMonth() + 1}
+								onChange={(e) => {
+									setFilter((prev) => {
+										const newFilter = { ...prev };
+										newFilter.month = e.detail.value;
+										return newFilter;
+									});
+								}}
+							>
+								{months.map((month, i) => (
+									<ion-select-option
+										value={i + 1}
+										onClick={(prev) => {
+											const newFilter = { ...prev };
+											newFilter.month = i + 1;
+											setFilter(newFilter);
+										}}
+									>
 										{month}
 									</ion-select-option>
 								))}
-							</ion-select>
+							</IonSelect>
 						</ion-item>
 
 						<ion-item>
 							<ion-label>Selecciona un año</ion-label>
-							<ion-select interface="popover" placeholder="Año">
+							<IonSelect
+								interface="popover"
+								placeholder="Año"
+								value={todayDate.getFullYear()}
+								onChange={(e) => {
+									setFilter((prev) => {
+										const newFilter = { ...prev };
+										newFilter.year = e.detail.value;
+										return newFilter;
+									});
+								}}
+							>
 								{years.map((year) => (
 									<ion-select-option value={year}>
 										{year}
 									</ion-select-option>
 								))}
-							</ion-select>
+							</IonSelect>
 						</ion-item>
 
-						<ion-item>
+						{/* <ion-item>
 							<ion-label>Cantidad máxima</ion-label>
 							<ion-select
 								interface="popover"
@@ -189,7 +245,7 @@ export default function Home({ accessToken }) {
 									100
 								</ion-select-option>
 							</ion-select>
-						</ion-item>
+						</ion-item> */}
 
 						<div class="ion-padding">
 							<ion-button
@@ -202,6 +258,8 @@ export default function Home({ accessToken }) {
 						</div>
 					</ion-list>
 				)}
+
+				{console.log(filter)}
 
 				{progress && (
 					<progress value={progress} max={pageSize * 1200000} />
