@@ -70,7 +70,7 @@ export default function Home({ accessToken }) {
 		console.log("getting Data");
 		setProgress(10000000);
 		axios
-			.get("/api/getData", {
+			.get("https://mynube.vercel.app/api/getData", {
 				withCredentials: true,
 				params: {
 					pageSize,
