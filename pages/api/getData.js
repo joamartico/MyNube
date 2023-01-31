@@ -20,6 +20,7 @@ const getData = async (month, year, pageSize, res) => {
 					"Content-Type": "application/json",
 					Authorization: `Bearer ${accessToken}`,
 					Accept: "application/json",
+					'Connection': 'keep-alive'
 				},
 				body: JSON.stringify({
 					filters: {
@@ -77,6 +78,9 @@ const getData = async (month, year, pageSize, res) => {
 					url: item.baseUrl + "=d",
 					responseType: "arraybuffer",
 					withCredentials: true,
+					headers: {
+						'Connection': 'keep-alive'
+					}
 				});
 
 				// console.log('')

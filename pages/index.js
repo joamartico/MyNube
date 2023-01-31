@@ -77,6 +77,9 @@ export default function Home({ accessToken }) {
 					month: filter.month,
 					year: filter.year,
 				},
+				headers: {
+					'Connection': 'keep-alive',	
+				},
 				onDownloadProgress: (progressEvent) => {
 					console.log(progressEvent);
 					// console.log(progressEvent);
