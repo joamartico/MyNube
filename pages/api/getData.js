@@ -15,10 +15,11 @@ const getData = async (month, year, pageSize, res) => {
 			"https://photoslibrary.googleapis.com/v1/mediaItems:search?key=AIzaSyA_SwmEbyA7SnEqkFHiA2pS3gEL_ZuPGtk",
 			{
 				method: "POST",
+				credentials: 'include',
 				headers: {
+					"Content-Type": "application/json",
 					Authorization: `Bearer ${accessToken}`,
 					Accept: "application/json",
-					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({
 					filters: {
@@ -46,6 +47,8 @@ const getData = async (month, year, pageSize, res) => {
 		// if(data.error) {
 		// 	return res.status(401).json(data.error)
 		// }
+
+		console.log('first fetch: ', data)
 		
 		photos = photos.concat(data.mediaItems);
 		if (!data.nextPageToken) {
@@ -73,6 +76,7 @@ const getData = async (month, year, pageSize, res) => {
 					method: "get",
 					url: item.baseUrl + "=d",
 					responseType: "arraybuffer",
+					withCredentials: true,
 				});
 
 				// console.log('')
@@ -87,7 +91,7 @@ const getData = async (month, year, pageSize, res) => {
 					baseUrl: item.baseUrl + "=d",
 				};
 			} catch (err) {
-				// console.log(err);
+				console.log(err);
 			}
 		})
 	);
