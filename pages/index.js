@@ -70,10 +70,10 @@ export default function Home({ accessToken }) {
 		console.log("getting Data");
 		setProgress(10000000);
 		axios
-			.get("/api/getData", {
+			.get("/api/getPhotos", {
 				withCredentials: true,
 				params: {
-					pageSize,
+					// pageSize,
 					month: filter.month,
 					year: filter.year,
 				},
