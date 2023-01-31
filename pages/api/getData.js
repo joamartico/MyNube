@@ -20,7 +20,7 @@ const getData = async (month, year, pageSize, res) => {
 					"Content-Type": "application/json",
 					Authorization: `Bearer ${accessToken}`,
 					Accept: "application/json",
-					'Connection': 'keep-alive'
+					// 'Connection': 'keep-alive'
 				},
 				body: JSON.stringify({
 					filters: {
@@ -78,9 +78,9 @@ const getData = async (month, year, pageSize, res) => {
 					url: item.baseUrl + "=d",
 					responseType: "arraybuffer",
 					withCredentials: true,
-					headers: {
-						'Connection': 'keep-alive'
-					}
+					// headers: {
+					// 	'Connection': 'keep-alive'
+					// }
 				});
 
 				// console.log('')
@@ -142,6 +142,6 @@ export default async (req, res) => {
 		return res.status(401).end();
 	}
 
-	res.setHeader("X-Progress", 12345);
+	// res.setHeader("X-Progress", 12345);
 	res.status(200).json(data);
 };
