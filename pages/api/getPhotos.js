@@ -49,20 +49,7 @@ export default async function handler(req, res) {
 		// 	return res.status(401).json(data.error)
 		// }
 
-		console.log('first fetch: ', response)
-        console.log('')
-        console.log('')
-        console.log('')
-        console.log('')
-        console.log('')
-        console.log('')
-        console.log('')
-        console.log('')
-        console.log('')
-        console.log('')
-        console.log('')
-        console.log('')
-		console.log('first fetch: ', data)
+		
 		
 		photos = photos.concat(data.mediaItems);
 		if (!data.nextPageToken) {

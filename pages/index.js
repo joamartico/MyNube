@@ -29,6 +29,7 @@ const todayDate = new Date();
 export default function Home({ accessToken }) {
 	const [session, loadingSession] = useSession();
 	const [images, setImages] = useState();
+	const [imagesData, setImagesData] = useState([]);
 	const [pageSize, setPageSize] = useState(100);
 	const [progress, setProgress] = useState(null);
 	const [popover, setPopover] = useState(false);
@@ -78,7 +79,7 @@ export default function Home({ accessToken }) {
 					year: filter.year,
 				},
 				// headers: {
-				// 	'Connection': 'keep-alive',	
+				// 	'Connection': 'keep-alive',
 				// },
 				onDownloadProgress: (progressEvent) => {
 					console.log(progressEvent);
@@ -96,6 +97,34 @@ export default function Home({ accessToken }) {
 				// console.log("response-headers: ", response.headers["content-length"]);
 				setProgress();
 				setImages(response.data);
+
+				// const newData = response.data.map(item => {
+				// 	return {
+				// 		baseUrl: item.baseUrl,
+				// 		filename: item.filename,
+				// 		mediaMetadata: item.mediaMetadata
+				// 	}
+				// })
+
+				response.data.forEach((item) => {
+					console.log(item);
+
+					axios
+						.get("/api/getPhotoData", {
+							withCredentials: true,
+							params: {
+								photo: JSON.stringify(item),
+							},
+							// headers: {
+							// 	'Connection': 'keep-alive' // UNSAFE !?
+							// }
+						})
+						.then((res) => {
+							setImagesData((prev) => [...prev, res.data]);
+							console.log("succesfull!", res);
+						})
+						.catch((e) => console.log("NOT succesfull!", e));
+				});
 			})
 			.catch((e) => {
 				console.log("failed fetch: ", e);
@@ -122,10 +151,12 @@ export default function Home({ accessToken }) {
 						<Logo>MyNube</Logo>
 					) : (
 						<ion-buttons slot="start">
-							<ion-back-button default-href="/" onClick={() => setImages()}></ion-back-button>
+							<ion-back-button
+								default-href="/"
+								onClick={() => setImages()}
+							></ion-back-button>
 						</ion-buttons>
 					)}
-
 				</ion-toolbar>
 			</ion-header>
 
@@ -136,11 +167,10 @@ export default function Home({ accessToken }) {
 			<ion-content>
 				{images ? (
 					<>
-						<ion-toolbar style={{ marginBottom: 15, marginTop: 20 }}>
-							<ion-title
-								size="large"
-								
-							>
+						<ion-toolbar
+							style={{ marginBottom: 15, marginTop: 20 }}
+						>
+							<ion-title size="large">
 								{months[filter.month - 1]} {filter.year}
 							</ion-title>
 						</ion-toolbar>
@@ -160,7 +190,7 @@ export default function Home({ accessToken }) {
 						<DownloadButton
 							expand="block"
 							onClick={() => {
-								zipImages(images);
+								zipImages(imagesData);
 							}}
 						>
 							Obtener ZIP
