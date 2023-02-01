@@ -163,7 +163,9 @@ export default function Home({ accessToken }) {
 					<>
 						<List>
 							{images?.map((img, i) => (
-								<Img src={img?.baseUrl} key={i} />
+								<a href={img.baseUrl} rel="noreferrer">
+									<Img src={img.baseUrl} key={i} />
+								</a>
 							))}
 						</List>
 
@@ -394,7 +396,7 @@ const DownloadButton = styled.div`
 	align-items: center;
 	box-shadow: 0px 4px 43px 15px rgba(0, 0, 0, 0.8);
 	color: white;
-	border: 2px solid #8BB3FF;
+	border: 2px solid #8bb3ff;
 	justify-content: center;
 `;
 
