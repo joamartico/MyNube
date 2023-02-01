@@ -11,7 +11,6 @@ export default async function handler(req, res) {
 	console.log('item')
 	console.log(item);
 
-
 	// const imgs = await Promise.all(
 	// 	photos.map(async (item) => {
 	try {
