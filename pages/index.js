@@ -29,9 +29,7 @@ const todayDate = new Date();
 export default function Home({ accessToken }) {
 	const [session, loadingSession] = useSession();
 	const [images, setImages] = useState();
-	const [imagesData, setImagesData] = useState([]);
-	const [pageSize, setPageSize] = useState(100);
-	const [progress, setProgress] = useState(null);
+	const [progress, setProgress] = useState(0);
 	const [popover, setPopover] = useState(false);
 	const [filter, setFilter] = useState({
 		year: todayDate.getFullYear(),
@@ -39,11 +37,38 @@ export default function Home({ accessToken }) {
 		max: null,
 	});
 
+	const getImagesData = async (_images) => {
+		const imagesData = [];
+		for (const item of _images) {
+			try {
+				const res = await axios.get("/api/getPhotoData", {
+					withCredentials: true,
+					params: {
+						photo: JSON.stringify(item),
+					},
+				});
+				imagesData.push(res.data);
+				setProgress((prev) => {
+					const newPerc = parseInt(prev + 100 / images.length);
+					console.log(newPerc);
+					return newPerc;
+				});
+			} catch (e) {
+				console.log("NOT succesfull!", e);
+			}
+		}
+		return imagesData;
+	};
+
 	async function zipImages(_images) {
+		const imagesData = await getImagesData(_images);
+		console.log("result imagesData: ", imagesData);
+
 		const zip = new JSZip();
 
-		// Fetch each image and add it to the zip file
-		_images.forEach((image) => {
+		// Add each image to the zip file
+		imagesData.forEach((image) => {
+			console.log("image to zip: ", image);
 			if (!image) return;
 			zip.file(image?.filename, image?.base64, {
 				base64: true,
@@ -69,66 +94,21 @@ export default function Home({ accessToken }) {
 
 	async function getData() {
 		console.log("getting Data");
-		setProgress(10000000);
 		axios
 			.get("/api/getPhotos", {
 				withCredentials: true,
 				params: {
-					// pageSize,
 					month: filter.month,
 					year: filter.year,
 				},
-				// headers: {
-				// 	'Connection': 'keep-alive',
-				// },
-				onDownloadProgress: (progressEvent) => {
-					console.log(progressEvent);
-					// console.log(progressEvent);
-					const { loaded } = progressEvent;
-					// const total =
-					// 	progressEvent.currentTarget.getResponseHeader(
-					// 		"content-length"
-					// 	);
-					setProgress(loaded);
-				},
 			})
 			.then((response) => {
-				console.log("successful fetch: ", response);
-				// console.log("response-headers: ", response.headers["content-length"]);
-				setProgress();
 				setImages(response.data);
-
-				// const newData = response.data.map(item => {
-				// 	return {
-				// 		baseUrl: item.baseUrl,
-				// 		filename: item.filename,
-				// 		mediaMetadata: item.mediaMetadata
-				// 	}
-				// })
-
-				response.data.forEach((item) => {
-					console.log(item);
-
-					axios
-						.get("/api/getPhotoData", {
-							withCredentials: true,
-							params: {
-								photo: JSON.stringify(item),
-							},
-							// headers: {
-							// 	'Connection': 'keep-alive' // UNSAFE !?
-							// }
-						})
-						.then((res) => {
-							setImagesData((prev) => [...prev, res.data]);
-							console.log("succesfull!", res);
-						})
-						.catch((e) => console.log("NOT succesfull!", e));
-				});
+				setProgress(0);
 			})
 			.catch((e) => {
 				console.log("failed fetch: ", e);
-				// signOut();
+				signOut();
 			});
 	}
 
@@ -190,10 +170,16 @@ export default function Home({ accessToken }) {
 						<DownloadButton
 							expand="block"
 							onClick={() => {
-								zipImages(imagesData);
+								zipImages(images);
+							}}
+							style={{
+								pointerEvents: progress ? "none" : "",
+								background:
+									progress && progress < 95 ? "#bbbd" : "",
 							}}
 						>
-							Obtener ZIP
+							{progress ? `${progress}%` : "Obtener ZIP"}
+							<Progress val={progress} />
 						</DownloadButton>
 					</>
 				) : (
@@ -284,10 +270,6 @@ export default function Home({ accessToken }) {
 							</ion-button>
 						</div>
 					</ion-list>
-				)}
-
-				{progress && (
-					<progress value={progress} max={pageSize * 1200000} />
 				)}
 			</ion-content>
 		</>
@@ -390,11 +372,13 @@ const Popover = styled.div`
 
 const DownloadButton = styled.div`
 	background: var(--ion-color-primary);
+	transition: all ease-in-out 0.5s;
 	border-radius: 10px;
 	height: 60px;
 	width: 93%;
 	max-width: 800px;
 	position: fixed;
+	z-index: 9999999;
 	bottom: 15px;
 	// left: 50%;
 	// right: 50%;
@@ -410,7 +394,39 @@ const DownloadButton = styled.div`
 	align-items: center;
 	box-shadow: 0px 4px 43px 15px rgba(0, 0, 0, 0.8);
 	color: white;
-	border: 2px solid #fff6;
+	border: 2px solid #8BB3FF;
+	justify-content: center;
+`;
+
+const Progress = styled.div`
+	background: var(--ion-color-primary);
+	transition: all ease-in-out 0.5s;
+	border-radius: 10px 0 0 10px;
+	/* height: 60px; */
+	height: 100%;
+	width: ${({ val }) => val}%;
+	max-width: 800px;
+	z-index: -5;
+	/* position: fixed; */
+	/* bottom: 15px; */
+	// left: 50%;
+	// right: 50%;
+	/* left: 50%; */
+	/* transform: translateX(-50%); */
+	margin-right: auto;
+	display: flex;
+	font-weight: 700;
+	font-size: 17px;
+	cursor: pointer;
+	text-align: center;
+	justify-content: center;
+	align-items: center;
+	color: white;
+	position: absolute;
+	left: 0;
+	/* border-left: 2px solid #fff6;
+	border-top: 2px solid #fff6;
+	border-bottom: 2px solid #fff6; */
 `;
 
 const Img = styled.img`
