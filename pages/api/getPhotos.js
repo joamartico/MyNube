@@ -1,14 +1,27 @@
+import { getSession } from "next-auth/client";
 import { getToken } from "next-auth/jwt";
 
 export default async function handler(req, res) {
+	const session = await getSession({ req });
+
+	if (!session) {
+		return res.status(401).end();
+	}
+
+    const secret = process.env.SECRET;
+	const token = await getToken({ req, secret, encryption: true });
+	const accessToken = token.accessToken;
+	
+	if (!accessToken) {
+		return res.status(401).end();
+	}
+
 	let pageToken = "";
 	let photos = [];
     const month = req.query.month;
 	const year = req.query.year;
     
-    const secret = process.env.SECRET;
-    const token = await getToken({ req, secret, encryption: true });
-	const accessToken = token.accessToken;
+
 
 	while (true) {
 		const response = await fetch(
