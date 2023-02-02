@@ -53,7 +53,10 @@ export default async function handler(req, res) {
 					pageToken: pageToken,
 				}),
 			}
-		);
+		).catch(err => {
+			console.log(err)
+			res.status(401).end();
+		})
 
 		
 		const data = await response.json();
