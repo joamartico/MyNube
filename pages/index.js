@@ -6,6 +6,7 @@ import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import styled from "styled-components";
 import IonSelect from "../components/IonSelect";
+import { loadingController } from "@ionic/core";
 
 const months = [
 	"Enero",
@@ -36,6 +37,8 @@ export default function Home({ accessToken }) {
 		month: todayDate.getMonth() + 1,
 		max: null,
 	});
+
+	
 
 	const getImagesData = async (_images) => {
 		const imagesData = [];
@@ -90,6 +93,11 @@ export default function Home({ accessToken }) {
 	}, [session]);
 
 	async function getPhotos() {
+		const loading = await loadingController.create({
+			message: "Loading photos",
+		});
+		loading.present();
+
 		axios
 			.get("/api/getPhotos", {
 				withCredentials: true,
@@ -100,6 +108,7 @@ export default function Home({ accessToken }) {
 			})
 			.then((response) => {
 				response.data && setImages(response.data);
+				loading.dismiss()
 				setProgress(0);
 			})
 			.catch((e) => {
