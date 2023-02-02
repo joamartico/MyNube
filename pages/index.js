@@ -49,7 +49,7 @@ export default function Home({ accessToken }) {
 				});
 				imagesData.push(res.data);
 				setProgress((prev) => {
-					const newPerc = parseInt(prev + 100 / images.length);
+					const newPerc = prev + 100 / images.length;
 					return newPerc;
 				});
 			} catch (e) {
@@ -181,8 +181,15 @@ export default function Home({ accessToken }) {
 									progress && progress < 95 ? "#bbbd" : "",
 							}}
 						>
-							{progress ? `${progress}%` : "Obtener ZIP"}
-							<Progress val={progress} />
+							{progress
+								? `${progress.toFixed(0)}%`
+								: "Obtener ZIP"}
+							<Progress
+								val={progress}
+								style={{
+									borderRadius: progress > 99 ? 10 : "",
+								}}
+							/>
 						</DownloadButton>
 					</>
 				) : (
