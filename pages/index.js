@@ -93,7 +93,7 @@ export default function Home({ accessToken }) {
 	}, [session]);
 
 	async function getData() {
-		console.log("getting Data");
+		console.log("getting photos");
 		axios
 			.get("/api/getPhotos", {
 				withCredentials: true,
@@ -103,6 +103,7 @@ export default function Home({ accessToken }) {
 				},
 			})
 			.then((response) => {
+				console.log('getting photos response: ', response)
 				setImages(response.data);
 				setProgress(0);
 			})
@@ -163,7 +164,7 @@ export default function Home({ accessToken }) {
 					<>
 						<List>
 							{images?.map((img, i) => (
-								<a href={img.baseUrl} rel="noreferrer">
+								<a href={img.baseUrl} rel="noreferrer" target="_blank">
 									<Img src={img.baseUrl} key={i} />
 								</a>
 							))}
