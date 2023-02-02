@@ -57,7 +57,7 @@ function MyApp({ Component, pageProps }) {
 			</Head>
 
 			<Context>
-				<ion-app>
+				<ion-app mode="ios">
 					{/* <SessionProvider session={pageProps.session}> */}
 						<Component {...pageProps} />
 					{/* </SessionProvider> */}

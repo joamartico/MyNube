@@ -59,7 +59,7 @@ export default async function handler(req, res) {
 			return res.status(401).json(data.error)
 		}
 
-		photos = photos.concat(data.mediaItems);
+		photos = data.mediaItems ? photos.concat(data.mediaItems) : []
 		if (!data.nextPageToken) {
 			break;
 		}

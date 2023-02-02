@@ -50,7 +50,6 @@ export default function Home({ accessToken }) {
 				imagesData.push(res.data);
 				setProgress((prev) => {
 					const newPerc = parseInt(prev + 100 / images.length);
-					console.log(newPerc);
 					return newPerc;
 				});
 			} catch (e) {
@@ -62,13 +61,11 @@ export default function Home({ accessToken }) {
 
 	async function zipImages(_images) {
 		const imagesData = await getImagesData(_images);
-		console.log("result imagesData: ", imagesData);
 
 		const zip = new JSZip();
 
 		// Add each image to the zip file
 		imagesData.forEach((image) => {
-			console.log("image to zip: ", image);
 			if (!image) return;
 			zip.file(image?.filename, image?.base64, {
 				base64: true,
@@ -92,8 +89,7 @@ export default function Home({ accessToken }) {
 		}
 	}, [session]);
 
-	async function getData() {
-		console.log("getting photos");
+	async function getPhotos() {
 		axios
 			.get("/api/getPhotos", {
 				withCredentials: true,
@@ -103,8 +99,7 @@ export default function Home({ accessToken }) {
 				},
 			})
 			.then((response) => {
-				console.log('getting photos response: ', response)
-				setImages(response.data);
+				response.data && setImages(response.data);
 				setProgress(0);
 			})
 			.catch((e) => {
@@ -155,6 +150,7 @@ export default function Home({ accessToken }) {
 								{months[filter.month - 1]} {filter.year}
 							</ion-title>
 						</ion-toolbar>
+						<Subtitle>{images.length} images</Subtitle>
 					</>
 				) : (
 					""
@@ -164,8 +160,12 @@ export default function Home({ accessToken }) {
 					<>
 						<List>
 							{images?.map((img, i) => (
-								<a href={img.baseUrl} rel="noreferrer" target="_blank">
-									<Img src={img.baseUrl} key={i} />
+								<a
+									href={img?.baseUrl}
+									rel="noreferrer"
+									target="_blank"
+								>
+									<Img src={img?.baseUrl} key={i} />
 								</a>
 							))}
 						</List>
@@ -267,7 +267,7 @@ export default function Home({ accessToken }) {
 							<ion-button
 								expand="block"
 								fill="outline"
-								onClick={() => getData()}
+								onClick={() => getPhotos()}
 							>
 								Buscar
 							</ion-button>
@@ -438,6 +438,12 @@ const Img = styled.img`
 	margin-left: 6px;
 	margin-bottom: 20px;
 	border-radius: 5px;
+`;
+
+const Subtitle = styled.p`
+	margin-top: -15px;
+	margin-left: 18px;
+	padding-bottom: 0px;
 `;
 
 const List = styled.div`
