@@ -38,8 +38,6 @@ export default function Home({ accessToken }) {
 		max: null,
 	});
 
-	
-
 	const getImagesData = async (_images) => {
 		const imagesData = [];
 		for (const item of _images) {
@@ -80,7 +78,7 @@ export default function Home({ accessToken }) {
 		const content = await zip.generateAsync({ type: "blob" });
 
 		// Download zip
-		saveAs(content, "images.zip");
+		saveAs(content, `${months[filter.month-1]}_${filter.year}.zip`);
 
 		return content;
 	}
@@ -108,7 +106,7 @@ export default function Home({ accessToken }) {
 			})
 			.then((response) => {
 				response.data && setImages(response.data);
-				loading.dismiss()
+				loading.dismiss();
 				setProgress(0);
 			})
 			.catch((e) => {
@@ -138,7 +136,10 @@ export default function Home({ accessToken }) {
 						<ion-buttons slot="start">
 							<ion-back-button
 								default-href="/"
-								onClick={() => setImages()}
+								onClick={() => {
+									setImages();
+									setFilter()
+								}}
 							></ion-back-button>
 						</ion-buttons>
 					)}
