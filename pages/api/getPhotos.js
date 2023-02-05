@@ -59,6 +59,14 @@ export default async function handler(req, res) {
 			return res.status(401).json(data.error)
 		}
 
+		console.log('*')
+		console.log('*')
+		console.log('*')
+		console.log(data)
+		console.log('*')
+		console.log('*')
+		console.log('*')
+
 		photos = data.mediaItems ? photos.concat(data.mediaItems) : []
 		if (!data.nextPageToken) {
 			break;

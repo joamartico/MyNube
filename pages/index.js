@@ -170,7 +170,7 @@ export default function Home({ accessToken }) {
 						<List>
 							{images?.map((img, i) => (
 								<a
-									href={img?.baseUrl}
+									href={img?.productUrl}
 									rel="noreferrer"
 									target="_blank"
 								>
