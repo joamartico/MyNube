@@ -38,6 +38,31 @@ export default function Home({ accessToken }) {
 		max: null,
 	});
 
+	async function getPhotos() {
+		const loading = await loadingController.create({
+			message: "Loading photos",
+		});
+		loading.present();
+
+		axios
+			.get("/api/getPhotos", {
+				withCredentials: true,
+				params: {
+					month: filter.month,
+					year: filter.year,
+				},
+			})
+			.then((response) => {
+				response.data && setImages(response.data.reverse());
+				loading.dismiss();
+				setProgress(0);
+			})
+			.catch((e) => {
+				console.log("failed fetch: ", e);
+				signOut();
+			});
+	}
+
 	const getImagesData = async (_images) => {
 		const imagesData = [];
 		for (const item of _images) {
@@ -89,31 +114,6 @@ export default function Home({ accessToken }) {
 			signOut();
 		}
 	}, [session]);
-
-	async function getPhotos() {
-		const loading = await loadingController.create({
-			message: "Loading photos",
-		});
-		loading.present();
-
-		axios
-			.get("/api/getPhotos", {
-				withCredentials: true,
-				params: {
-					month: filter.month,
-					year: filter.year,
-				},
-			})
-			.then((response) => {
-				response.data && setImages(response.data);
-				loading.dismiss();
-				setProgress(0);
-			})
-			.catch((e) => {
-				console.log("failed fetch: ", e);
-				signOut();
-			});
-	}
 
 	return (
 		<>
@@ -178,11 +178,11 @@ export default function Home({ accessToken }) {
 									{img.mimeType == "video/mp4" ? (
 										<video
 											key={i}
-											src={img.baseUrl + '=dv'}
+											src={img.baseUrl + "=dv"}
 											// type="video/mp4"
 											controls
-											width='300'
-											height='200'
+											width="300"
+											height="200"
 										/>
 									) : (
 										<Img src={img?.baseUrl} key={i} />

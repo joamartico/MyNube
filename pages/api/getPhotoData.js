@@ -22,10 +22,11 @@ export default async function handler(req, res) {
 
 		newPhoto = {
 			base64,
-			filename:
-				item.mediaMetadata.creationTime +
-				"." +
-				item.filename.split(".")[1],
+			filename: item.filename
+			// filename:
+			// 	item.mediaMetadata.creationTime +
+			// 	"." +
+			// 	item.filename.split(".")[1],
 		};
 	} catch (err) {
 		console.log(err);
