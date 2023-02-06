@@ -78,7 +78,7 @@ export default function Home({ accessToken }) {
 		const content = await zip.generateAsync({ type: "blob" });
 
 		// Download zip
-		saveAs(content, `${months[filter.month-1]}_${filter.year}.zip`);
+		saveAs(content, `${months[filter.month - 1]}_${filter.year}.zip`);
 
 		return content;
 	}
@@ -138,7 +138,7 @@ export default function Home({ accessToken }) {
 								default-href="/"
 								onClick={() => {
 									setImages();
-									setFilter()
+									setFilter();
 								}}
 							></ion-back-button>
 						</ion-buttons>
@@ -175,7 +175,19 @@ export default function Home({ accessToken }) {
 									rel="noreferrer"
 									target="_blank"
 								>
-									<Img src={img?.baseUrl} key={i} />
+									{img.mimeType == "video/mp4" ? (
+										<video
+											key={i}
+											src={img.baseUrl + '=dv'}
+											// type="video/mp4"
+											controls
+											width='300'
+											height='200'
+										/>
+									) : (
+										<Img src={img?.baseUrl} key={i} />
+									)}
+									{console.log(img)}
 								</a>
 							))}
 						</List>
@@ -193,7 +205,7 @@ export default function Home({ accessToken }) {
 						>
 							{progress
 								? `${progress.toFixed(0)}%`
-								: "Obtener ZIP"}
+								: "Descargar ZIP"}
 							<Progress
 								val={progress}
 								style={{
