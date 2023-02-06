@@ -41,6 +41,8 @@ function MyApp({ Component, pageProps }) {
 					name="keywords"
 					content="nutrition, food, vitamins, minerals"
 				/>
+				<meta name="google-site-verification" content="3XoSVdS7QLQWutddbE1sJ60XT3mFR-WXrP80V4AharU" />
+				
 				{/*  PWA  */}
 				<meta
 					name="viewport"
