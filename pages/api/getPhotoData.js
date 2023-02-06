@@ -20,9 +20,11 @@ export default async function handler(req, res) {
 
 		const base64 = response.data.toString("base64"); // hace falta?
 
+		const fileDate = item.mediaMetadata.creationTime.split('T')[0]
+
 		newPhoto = {
 			base64,
-			filename: item.filename
+			filename: fileDate + '__' + item.filename
 			// filename:
 			// 	item.mediaMetadata.creationTime +
 			// 	"." +
