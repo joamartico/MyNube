@@ -43,9 +43,6 @@ export default async function handler(req, res) {
 								},
 							],
 						},
-						// mediaTypeFilter: {
-						// 	mediaTypes: ["VIDEO"],
-						// },
 					},
 					pageSize: 100,
 					pageToken: pageToken,
@@ -58,8 +55,6 @@ export default async function handler(req, res) {
 		if(data.error) {
 			return res.status(401).json(data.error)
 		}
-
-
 
 		photos = data.mediaItems ? photos.concat(data.mediaItems) : []
 		if (!data.nextPageToken) {

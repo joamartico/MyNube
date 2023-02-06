@@ -12,7 +12,10 @@ module.exports = withPWA({
     disable: process.env.NODE_ENV === 'development',
     // runtimeCaching
   },
-    
+
+  api: {
+    responseLimit: false,
+  },
 
   webpack: (config) => {
     config.plugins.push(

@@ -187,7 +187,6 @@ export default function Home({ accessToken }) {
 									) : (
 										<Img src={img?.baseUrl} key={i} />
 									)}
-									{console.log(img)}
 								</a>
 							))}
 						</List>
