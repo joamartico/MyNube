@@ -31,7 +31,7 @@ export default async function handler(req, res) {
 			// 	item.filename.split(".")[1],
 		};
 	} catch (err) {
-		console.log(err);
+		console.log('cant get photo data: ', err);
 	}
 
 	res.status(200).json(newPhoto);
