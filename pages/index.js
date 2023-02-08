@@ -78,8 +78,14 @@ export default function Home({ accessToken }) {
 					const newPerc = prev + 100 / images.length;
 					return newPerc;
 				});
+				const newImages = [...images]
+				newImages[_images.indexOf(item)].status = 'ok'
+				setImages(newImages)
 			} catch (e) {
 				console.log("NOT succesfull!", e);
+				const newImages = [...images]
+				newImages[_images.indexOf(item)].status = 'error'
+				setImages(newImages)
 			}
 		}
 		return imagesData;
@@ -170,7 +176,7 @@ export default function Home({ accessToken }) {
 					<>
 						<List>
 							{images?.map((img, i) => (
-								<a
+								<Content
 									href={img?.productUrl}
 									rel="noreferrer"
 									target="_blank"
@@ -187,7 +193,9 @@ export default function Home({ accessToken }) {
 									) : (
 										<Img src={img?.baseUrl} key={i} />
 									)}
-								</a>
+
+									{img.status && <Check status={img.status}/>}
+								</Content>
 							))}
 						</List>
 
@@ -269,27 +277,6 @@ export default function Home({ accessToken }) {
 								))}
 							</IonSelect>
 						</ion-item>
-
-						{/* <ion-item>
-							<ion-label>Cantidad máxima</ion-label>
-							<ion-select
-								interface="popover"
-								placeholder="Número"
-							>
-								<ion-select-option value="All">
-									All
-								</ion-select-option>
-								<ion-select-option value="10">
-									10
-								</ion-select-option>
-								<ion-select-option value="50">
-									50
-								</ion-select-option>
-								<ion-select-option value="100">
-									100
-								</ion-select-option>
-							</ion-select>
-						</ion-item> */}
 
 						<div class="ion-padding">
 							<ion-button
@@ -460,12 +447,29 @@ const Progress = styled.div`
 	border-bottom: 2px solid #fff6; */
 `;
 
-const Img = styled.img`
-	max-height: 200px;
+const Content = styled.div`
 	margin-right: 6px;
 	margin-left: 6px;
 	margin-bottom: 20px;
+	position: relative;
+	height: fit-content;
+	max-height: 200px;
+`;
+
+const Check = styled.div`
+	position: absolute;
+	z-index: 9;
+	right: 5px;
+	bottom: 5px;
+	height: 10px;
+	width: 10px;
+	border-radius: 50%;
+	background: ${({status}) => status == 'ok' ? '#7CCE4E' : 'red'};
+`;
+
+const Img = styled.img`
 	border-radius: 5px;
+	max-height: 200px;
 `;
 
 const Subtitle = styled.p`
@@ -483,3 +487,5 @@ const List = styled.div`
 	flex-wrap: wrap;
 	/* justify-content: center; */
 `;
+
+
