@@ -4,6 +4,10 @@ import styled from "styled-components";
 const login = () => {
 	return (
 		<>
+			<Head>
+				<link rel="canonical" href="https://mynube.vercel.app/login" />
+			</Head>
+
 			<ion-header>
 				<ion-toolbar>
 					<Logo>MyNube</Logo>
@@ -30,18 +34,18 @@ const login = () => {
 export async function getServerSideProps({ req }) {
 	const session = await getSession({ req });
 
-	if(session){
+	if (session) {
 		return {
 			redirect: {
-				destination: '/',
-				permanent: false
-			} 
-		}
+				destination: "/",
+				permanent: false,
+			},
+		};
 	}
 
-    return {
-        props: {}
-    }
+	return {
+		props: {},
+	};
 }
 
 export default login;
@@ -50,7 +54,6 @@ const Logo = styled.h1`
 	font-weight: 700;
 	margin: auto 15px;
 `;
-
 
 const CenterDiv = styled.div`
 	width: 100%;

@@ -7,6 +7,7 @@ import { saveAs } from "file-saver";
 import styled from "styled-components";
 import IonSelect from "../components/IonSelect";
 import { loadingController } from "@ionic/core";
+import Head from "next/head";
 
 const months = [
 	"Enero",
@@ -73,20 +74,20 @@ export default function Home({ accessToken }) {
 						photo: JSON.stringify(item),
 					},
 				});
-				console.log(res)
+				console.log(res);
 				imagesData.push(res.data);
 				setProgress((prev) => {
 					const newPerc = prev + 100 / images.length;
 					return newPerc;
 				});
-				const newImages = [...images]
-				newImages[_images.indexOf(item)].status = 'ok'
-				setImages(newImages)
+				const newImages = [...images];
+				newImages[_images.indexOf(item)].status = "ok";
+				setImages(newImages);
 			} catch (e) {
 				console.log("NOT succesfull!", e);
-				const newImages = [...images]
-				newImages[_images.indexOf(item)].status = 'error'
-				setImages(newImages)
+				const newImages = [...images];
+				newImages[_images.indexOf(item)].status = "error";
+				setImages(newImages);
 			}
 		}
 		return imagesData;
@@ -124,6 +125,10 @@ export default function Home({ accessToken }) {
 
 	return (
 		<>
+			<Head>
+				<link rel="canonical" href='https://mynube.vercel.app/' />
+			</Head>
+
 			<ion-header>
 				<ion-toolbar>
 					<ion-buttons slot="primary">
@@ -195,7 +200,9 @@ export default function Home({ accessToken }) {
 										<Img src={img?.baseUrl} key={i} />
 									)}
 
-									{img.status && <Check status={img.status}/>}
+									{img.status && (
+										<Check status={img.status} />
+									)}
 								</Content>
 							))}
 						</List>
@@ -465,7 +472,7 @@ const Check = styled.div`
 	height: 10px;
 	width: 10px;
 	border-radius: 50%;
-	background: ${({status}) => status == 'ok' ? '#7CCE4E' : 'red'};
+	background: ${({ status }) => (status == "ok" ? "#7CCE4E" : "red")};
 `;
 
 const Img = styled.img`
@@ -488,5 +495,3 @@ const List = styled.div`
 	flex-wrap: wrap;
 	/* justify-content: center; */
 `;
-
-
