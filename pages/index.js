@@ -73,6 +73,7 @@ export default function Home({ accessToken }) {
 						photo: JSON.stringify(item),
 					},
 				});
+				console.log(res)
 				imagesData.push(res.data);
 				setProgress((prev) => {
 					const newPerc = prev + 100 / images.length;
