@@ -1,4 +1,5 @@
 import { getSession, signIn } from "next-auth/client";
+import Head from "next/head";
 import styled from "styled-components";
 
 const login = () => {
