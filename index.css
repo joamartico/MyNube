@@ -6,6 +6,16 @@
     width: 100%;
 } */
 
+.full {
+    width: 96% !important;
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-bottom: 0;
+    height: 55px;
+    font-weight: bold;
+    font-size: large;
+}
+
 ion-list {
     max-width: 800px;
     position: relative;

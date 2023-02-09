@@ -7,17 +7,20 @@ export default async function handler(req, res) {
 	const item = JSON.parse(photo);
 
 	try {
-		const response = await axios({
-			method: "get",
-			url:
-				item.mimeType == "video/mp4"
-					? `${item.baseUrl}=dv`
-					: `${item.baseUrl}=d`,
-			responseType: "arraybuffer",
-			// withCredentials: true,
-		});
-
-		const base64 = response.data.toString("base64"); // hace falta?
+		const response = await fetch(
+			item.mimeType == "video/mp4"
+			  ? `${item.baseUrl}=dv`
+			  : `${item.baseUrl}=d`,
+			{
+			  method: "GET",
+			//   headers: {
+			// 	Accept: "application/octet-stream"
+			//   }
+			}
+		  );
+		  
+		  const arrayBuffer = await response.arrayBuffer();
+		  const base64 = Buffer.from(arrayBuffer).toString("base64");
 
 		const fileDate = item.mediaMetadata.creationTime.split("T")[0];
 
