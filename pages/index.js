@@ -180,8 +180,9 @@ export default function Home({ accessToken }) {
 							{images?.map((img, i) => (
 								<Content
 									href={img?.productUrl}
-									rel="noreferrer"
-									target="_blank"
+									onClick={() =>
+										window.open(img?.productUrl, "_blank")
+									}
 								>
 									{img.mimeType == "video/mp4" ? (
 										<video
@@ -316,48 +317,6 @@ export async function getServerSideProps({ req }) {
 	if (!token) return { props: { session } };
 	const accessToken = token?.accessToken;
 
-	// PROBAR HACER UN GET DE TODOS LOS ALBUMES (IDs)
-
-	// const filter = {
-	// 	albumId: "AF1QipOHZIYiUtG8KOaahXJcYjwg6qHxwaqbi2uVKkNW",
-	// 	pageSize: 10,
-	//   }
-
-	// const { data } = await axios.post(
-	// 	"https://photoslibrary.googleapis.com/v1/mediaItems:search",
-	// 	filter,
-	// 	{
-	// 		headers: {
-	// 			Authorization: `Bearer ${accessToken}`,
-
-	// 		},
-
-	// 	}
-	// )
-
-	// const imgs = await Promise.all(
-	// 	data.mediaItems.map(async (item) => {
-	// 		try {
-	// 			const response = await axios({
-	// 				method: "get",
-	// 				url: item.baseUrl + '=d',
-	// 				responseType: "arraybuffer",
-	// 			});
-
-	// 			const base64 = response.data.toString("base64");
-
-	// 			return {
-	// 				base64,
-	// 				filename: item.filename,
-	// 				baseUrl: item.baseUrl + '=d'
-	// 			};
-
-	// 		} catch (err) {
-	// 			console.log(err);
-	// 		}
-	// 	})
-	// );
-
 	return {
 		props: { session, accessToken },
 	};
@@ -370,8 +329,6 @@ const Logo = styled.h1`
 
 const Avatar = styled.img`
 	border-radius: 50%;
-	/* height: 38px;
-	width: 38px; */
 	height: 100%;
 	margin-left: 6px;
 `;
@@ -385,16 +342,14 @@ const Popover = styled.div`
 	top: 50px;
 	background: white;
 	border-radius: 10px;
-	/* border: 1px solid #aaa; */
 	padding: 18px;
 	font-weight: 600;
 	cursor: pointer;
 	box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.2);
 `;
 
-const DownloadButton = styled.div`
+const DownloadButton = styled.button`
 	background: var(--ion-color-primary);
-	transition: all ease-in-out 0.5s;
 	border-radius: 10px;
 	height: 60px;
 	width: 93%;
@@ -402,8 +357,6 @@ const DownloadButton = styled.div`
 	position: fixed;
 	z-index: 9999999;
 	bottom: 15px;
-	// left: 50%;
-	// right: 50%;
 	left: 50%;
 	transform: translateX(-50%);
 	margin: auto;
@@ -418,23 +371,20 @@ const DownloadButton = styled.div`
 	color: white;
 	border: 2px solid #8bb3ff;
 	justify-content: center;
+	transition: opacity 0.5s;
+	:active {
+		opacity: 0.6 !important;
+	}
 `;
 
 const Progress = styled.div`
 	background: var(--ion-color-primary);
-	transition: all ease-in-out 0.5s;
+	transition: all ease-in-out 0.7s;
 	border-radius: 10px 0 0 10px;
-	/* height: 60px; */
 	height: 100%;
 	width: ${({ val }) => val}%;
 	max-width: 800px;
 	z-index: -5;
-	/* position: fixed; */
-	/* bottom: 15px; */
-	// left: 50%;
-	// right: 50%;
-	/* left: 50%; */
-	/* transform: translateX(-50%); */
 	margin-right: auto;
 	display: flex;
 	font-weight: 700;
@@ -446,9 +396,6 @@ const Progress = styled.div`
 	color: white;
 	position: absolute;
 	left: 0;
-	/* border-left: 2px solid #fff6;
-	border-top: 2px solid #fff6;
-	border-bottom: 2px solid #fff6; */
 `;
 
 const Content = styled.div`
@@ -458,6 +405,7 @@ const Content = styled.div`
 	position: relative;
 	height: fit-content;
 	max-height: 200px;
+	cursor: pointer;
 `;
 
 const Check = styled.div`
@@ -484,10 +432,8 @@ const Subtitle = styled.p`
 
 const List = styled.div`
 	width: 100%;
-	/* height: 100%; */
 	padding: 10px;
 	padding-bottom: 75px;
 	display: flex;
 	flex-wrap: wrap;
-	/* justify-content: center; */
 `;
