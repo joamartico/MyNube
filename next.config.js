@@ -1,5 +1,7 @@
-export const config = {
+const config = {
 	api: {
 		responseLimit: false,
 	},
 };
+
+export default config
