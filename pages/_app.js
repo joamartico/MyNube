@@ -41,8 +41,12 @@ function MyApp({ Component, pageProps }) {
 					name="keywords"
 					content="nutrition, food, vitamins, minerals"
 				/>
-				<meta name="google-site-verification" content="3XoSVdS7QLQWutddbE1sJ60XT3mFR-WXrP80V4AharU" />
-				
+				<meta
+					name="google-site-verification"
+					content="3XoSVdS7QLQWutddbE1sJ60XT3mFR-WXrP80V4AharU"
+				/>
+				<link rel="canonical" href="https://mynube.vercel.app/" />
+
 				{/*  PWA  */}
 				<meta
 					name="viewport"
@@ -61,7 +65,7 @@ function MyApp({ Component, pageProps }) {
 			<Context>
 				<ion-app mode="ios">
 					{/* <SessionProvider session={pageProps.session}> */}
-						<Component {...pageProps} />
+					<Component {...pageProps} />
 					{/* </SessionProvider> */}
 				</ion-app>
 			</Context>

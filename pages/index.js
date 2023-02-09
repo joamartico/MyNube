@@ -125,10 +125,6 @@ export default function Home({ accessToken }) {
 
 	return (
 		<>
-			<Head>
-				<link rel="canonical" href='https://mynube.vercel.app/' />
-			</Head>
-
 			<ion-header>
 				<ion-toolbar>
 					<ion-buttons slot="primary">
