@@ -36,3 +36,13 @@ export default async function handler(req, res) {
 
 	res.status(200).json(newPhoto);
 }
+
+
+export const config = {
+	api: {
+	  responseLimit: false,
+	  bodyParser: {
+		sizeLimit: '50mb',
+	  },
+	},
+  }
