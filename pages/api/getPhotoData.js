@@ -1,5 +1,4 @@
 import axios from "axios";
-const JSZip = require("jszip");
 
 let newPhoto;
 
@@ -15,7 +14,7 @@ export default async function handler(req, res) {
 					? `${item.baseUrl}=dv`
 					: `${item.baseUrl}=d`,
 			responseType: "arraybuffer",
-			withCredentials: true,
+			// withCredentials: true,
 		});
 
 		const base64 = response.data.toString("base64"); // hace falta?
@@ -25,10 +24,6 @@ export default async function handler(req, res) {
 		newPhoto = {
 			base64,
 			filename: fileDate + "__" + item.filename,
-			// filename:
-			// 	item.mediaMetadata.creationTime +
-			// 	"." +
-			// 	item.filename.split(".")[1],
 		};
 	} catch (err) {
 		console.log("cant get photo data: ", err);
