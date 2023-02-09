@@ -20,29 +20,29 @@ export default async function handler(req, res) {
 
 		const base64 = response.data.toString("base64"); // hace falta?
 
-		const fileDate = item.mediaMetadata.creationTime.split('T')[0]
+		const fileDate = item.mediaMetadata.creationTime.split("T")[0];
 
 		newPhoto = {
 			base64,
-			filename: fileDate + '__' + item.filename
+			filename: fileDate + "__" + item.filename,
 			// filename:
 			// 	item.mediaMetadata.creationTime +
 			// 	"." +
 			// 	item.filename.split(".")[1],
 		};
 	} catch (err) {
-		console.log('cant get photo data: ', err);
+		console.log("cant get photo data: ", err);
 	}
 
 	res.status(200).json(newPhoto);
 }
 
-
 export const config = {
 	api: {
-	  responseLimit: false,
-	  bodyParser: {
-		sizeLimit: '50mb',
-	  },
+		externalResolver: true,
+		responseLimit: false,
+		bodyParser: {
+			sizeLimit: "50mb",
+		},
 	},
-  }
+};
