@@ -1,8 +1,20 @@
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 import styled from "styled-components";
 
 const onboarding = () => {
-    const router = useRouter()
+	const router = useRouter();
+
+	async function get(){
+		const res = await fetch("http://192.168.0.220:3001/api/hola")
+		const data = await res.json()
+		console.log(data)
+	}
+
+	useEffect(() => {
+	 get()
+	}, [])
+	
 
 	return (
 		<>
@@ -18,7 +30,15 @@ const onboarding = () => {
 							</MainSubtitle>
 						</TextContainer>
 
-						<ion-button class="full" onClick={() => router.push('/login')}>Get Started</ion-button>
+						<ion-button
+							class="full"
+							onClick={() => {
+								router.push("/login");
+                                // window.open('http://192.168.0.220:3000/', "_blank")
+							}}
+						>
+							Get Started
+						</ion-button>
 					</Card>
 				</Background>
 			</ion-content>
@@ -35,10 +55,9 @@ const Background = styled.div`
 	position: absolute;
 	top: 0;
 	left: 0;
-    display: flex;
-    justify-content: center;
+	display: flex;
+	justify-content: center;
 	align-items: center;
-
 `;
 
 const Card = styled.div`
@@ -71,7 +90,7 @@ const MainSubtitle = styled.h2`
 	display: flex;
 	align-items: center;
 	/* color: var(--ion-color-primary); */
-    color: #36a;
+	color: #36a;
 	margin-bottom: 5px;
 	margin-top: 3vh;
 	max-width: 500px;
@@ -80,5 +99,5 @@ const MainSubtitle = styled.h2`
 `;
 
 const TextContainer = styled.div`
-    margin-top: 150px;
+	margin-top: 150px;
 `;

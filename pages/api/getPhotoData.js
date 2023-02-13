@@ -9,18 +9,18 @@ export default async function handler(req, res) {
 	try {
 		const response = await fetch(
 			item.mimeType == "video/mp4"
-			  ? `${item.baseUrl}=dv`
-			  : `${item.baseUrl}=d`,
+				? `${item.baseUrl}=dv`
+				: `${item.baseUrl}=d`,
 			{
-			  method: "GET",
-			//   headers: {
-			// 	Accept: "application/octet-stream"
-			//   }
+				method: "GET",
+				//   headers: {
+				// 	Accept: "application/octet-stream"
+				//   }
 			}
-		  );
-		  
-		  const arrayBuffer = await response.arrayBuffer();
-		  const base64 = Buffer.from(arrayBuffer).toString("base64");
+		);
+
+		const arrayBuffer = await response.arrayBuffer();
+		const base64 = Buffer.from(arrayBuffer).toString("base64");
 
 		const fileDate = item.mediaMetadata.creationTime.split("T")[0];
 
