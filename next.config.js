@@ -2,7 +2,7 @@ const config = {
 	api: {
 		responseLimit: false,
 		bodyParser: {
-			sizeLimit: "50mb",
+			sizeLimit: "150mb",
 		},
 	},
 };

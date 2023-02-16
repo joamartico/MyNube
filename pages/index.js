@@ -69,7 +69,7 @@ export default function Home({ accessToken }) {
 		for (const item of _images) {
 			try {
 				console.log('first')
-				const res = await axios.get("https://mynube.up.railway.app/api/getPhotoData", {
+				const res = await axios.get("/api/getPhotoData", {
 					params: {
 						photo: JSON.stringify(item),
 					},

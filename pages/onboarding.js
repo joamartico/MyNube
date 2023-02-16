@@ -1,19 +1,10 @@
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 import styled from "styled-components";
 
 const onboarding = () => {
 	const router = useRouter();
 
-	async function get(){
-		const res = await fetch("http://192.168.0.220:3001/api/hola")
-		const data = await res.json()
-		console.log(data)
-	}
-
-	useEffect(() => {
-	 get()
-	}, [])
+	
 	
 
 	return (
