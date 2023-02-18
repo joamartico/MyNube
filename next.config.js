@@ -1,10 +1,12 @@
-const config = {
-	api: {
-		responseLimit: false,
-		bodyParser: {
-			sizeLimit: "150mb",
-		},
-	},
-};
+const withPWA = require('next-pwa');
+const runtimeCaching = require('next-pwa/cache');
 
-module.exports = config;
+module.exports = withPWA({
+  pwa: {
+    dest: 'public',
+    // disable: process.env.NODE_ENV === 'development',
+    register: true,     
+    runtimeCaching, // que hace?
+    // reactStrictMode: true, ??
+  },
+});
